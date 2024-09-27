@@ -1,60 +1,126 @@
-import "./App.css"
+import { useState } from "react";
+import "./App.css";
 
 function App() {
 
+  const [firstInput, setFirstInput] = useState("0");
+  const [secondInput, setSecondInput] = useState("0");
+  const [currentOperator, setCurrentOperator] = useState("+");
+  const [result, setResult] = useState("0");
+
+  const handleClick = (number, setOperand) => {
+
+    if (setOperand === setFirstInput) {
+
+      setFirstInput(prev => (prev === "0" ? number : prev + number));
+
+    } 
+    
+    else {
+
+      setSecondInput(prev => (prev === "0" ? number : prev + number));
+
+    }
+  };
+
+  const clearOperand = (setOperand) => {
+
+    setOperand("0");
+
+  };
+
+  const selectOperator = (operator) => {
+
+    setCurrentOperator(operator);
+
+  };
+
+  const computeResult = () => {
+
+    const value1 = parseFloat(firstInput);
+    const value2 = parseFloat(secondInput);
+    let resultValue = 0;
+
+    if (currentOperator === "+") {
+
+      resultValue = value1 + value2;
+
+    } 
+    
+    else if (currentOperator === "-") {
+
+      resultValue = value1 - value2;
+
+    }
+    
+    else if (currentOperator === "*") {
+
+      resultValue = value1 * value2;
+
+    } 
+    
+    else if (currentOperator === "÷") {
+
+      resultValue = value2 !== 0 ? value1 / value2 : "Error";
+
+    } 
+
+    else {
+
+      resultValue = "Error";
+
+    }
+
+    setResult(resultValue.toString());
+    
+  };
+
   return (
+
     <div className="calculator">
       <div className="panel">
-        <p>0</p>
+        <p>{firstInput}</p>
         <div className="numbers">
-          <button>1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>4</button>
-          <button>5</button>
-          <button>6</button>
-          <button>7</button>
-          <button>8</button>
-          <button>9</button>
-          <button>0</button>
-          <button>Clear</button>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(number => (
+            <button key={number} onClick={() => handleClick(number.toString(), setFirstInput)}>
+              {number}
+            </button>
+          ))}
+          <button onClick={() => clearOperand(setFirstInput)}>Clear</button>
         </div>
       </div>
 
       <div className="panel">
-        <p>+</p>
+        <p>{currentOperator}</p>
         <div className="numbers">
-          <button>+</button>
-          <button>-</button>
-          <button>*</button>
-          <button>÷</button>
+          {["+", "-", "*", "÷"].map(op => (
+            <button key={op} onClick={() => selectOperator(op)}>
+              {op}
+            </button>
+          ))}
         </div>
       </div>
 
       <div className="panel">
-        <p>0</p>
+        <p>{secondInput}</p>
         <div className="numbers">
-          <button>1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>4</button>
-          <button>5</button>
-          <button>6</button>
-          <button>7</button>
-          <button>8</button>
-          <button>9</button>
-          <button>0</button>
-          <button>Clear</button>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(number => (
+            <button key={number} onClick={() => handleClick(number.toString(), setSecondInput)}>
+              {number}
+            </button>
+          ))}
+          <button onClick={() => clearOperand(setSecondInput)}>Clear</button>
         </div>
       </div>
+
       <div className="panel answer">
-        <p>0</p>
+        <p>{result}</p>
         <div>
-          <button>=</button>
+          <button onClick={computeResult}>=</button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
